@@ -5,10 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Un detalle especial para ti ✨</title>
   <style>
-    /* Estilos generales y paleta de colores */
     :root {
-      --bg-color: #0f172a;
-      --card-bg: #1e293b;
+      --bg-color: #0b0f19;
+      --card-bg: rgba(30, 41, 59, 0.85);
       --accent: #6366f1;
       --accent-hover: #4f46e5;
       --text-main: #f8fafc;
@@ -31,23 +30,38 @@
       align-items: center;
       min-height: 100vh;
       padding: 20px;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Fondo del Universo */
+    #space-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
     }
 
     .container {
-      max-width: 600px;
+      max-width: 650px;
       width: 100%;
       margin: auto;
       text-align: center;
+      position: relative;
+      z-index: 2;
     }
 
-    /* Pantalla 1: Sobre / Botón de Inicio */
+    /* Pantalla Inicial */
     .envelope-screen {
       background: var(--card-bg);
+      backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 16px;
       padding: 40px 20px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-      transition: all 0.4s ease;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
     }
 
     .envelope-icon {
@@ -62,7 +76,7 @@
       50% { transform: translateY(-10px); }
     }
 
-    .btn-open {
+    .btn-main {
       background-color: var(--accent);
       color: white;
       border: none;
@@ -71,25 +85,26 @@
       font-weight: 600;
       border-radius: 30px;
       cursor: pointer;
-      transition: background-color 0.2s, transform 0.2s;
+      transition: all 0.3s ease;
       margin-top: 20px;
       box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
     }
 
-    .btn-open:hover {
+    .btn-main:hover {
       background-color: var(--accent-hover);
       transform: translateY(-2px);
     }
 
-    /* Pantalla 2: Carta Interactiva */
-    .letter-screen {
+    /* Pantalla Principal con Pestañas */
+    .main-screen {
       display: none;
       background: var(--card-bg);
+      backdrop-filter: blur(12px);
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 16px;
       padding: 30px 24px;
       text-align: left;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
       animation: fadeIn 0.8s ease forwards;
     }
 
@@ -98,18 +113,92 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .letter-title {
-      font-size: 1.8rem;
-      color: var(--gold);
-      margin-bottom: 15px;
-      text-align: center;
+    /* Navegación por Pestañas */
+    .nav-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 25px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 15px;
     }
 
-    .letter-body {
-      line-height: 1.7;
+    .tab-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-muted);
+      padding: 10px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .tab-btn.active {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+      box-shadow: 0 0 12px rgba(99, 102, 241, 0.5);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+
+    /* Estilos del Espacio Universo */
+    .universe-box {
+      text-align: center;
+      padding: 30px 10px;
+    }
+
+    .universe-box h2 {
+      color: var(--gold);
+      font-size: 1.6rem;
+      margin-bottom: 15px;
+    }
+
+    .universe-box p {
+      line-height: 1.8;
+      font-size: 1.1rem;
       color: var(--text-main);
-      margin-bottom: 25px;
-      font-size: 1.05rem;
+    }
+
+    /* Estilos del Espacio Promesas */
+    .promises-grid {
+      display: grid;
+      gap: 16px;
+      margin-top: 15px;
+    }
+
+    .promise-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      padding: 20px;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+    }
+
+    .promise-card:hover {
+      background: rgba(99, 102, 241, 0.15);
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .promise-card h4 {
+      color: var(--gold);
+      margin-bottom: 10px;
+      font-size: 1.15rem;
+    }
+
+    .promise-card p {
+      font-size: 1rem;
+      line-height: 1.6;
+      color: var(--text-main);
     }
 
     .highlight {
@@ -117,94 +206,65 @@
       font-weight: 600;
     }
 
-    /* Sección de Promesas y Recordatorios */
-    .promises-section {
-      margin-top: 30px;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      padding-top: 20px;
-    }
-
-    .promises-title {
-      font-size: 1.2rem;
-      margin-bottom: 15px;
-      text-align: center;
-      color: var(--text-muted);
-    }
-
-    .promises-grid {
-      display: grid;
-      gap: 15px;
-    }
-
-    .promise-card {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--accent);
-      padding: 18px;
-      border-radius: 12px;
-      transition: background 0.3s, transform 0.2s;
-    }
-
-    .promise-card:hover {
-      background: rgba(99, 102, 241, 0.15);
-      transform: translateY(-2px);
-    }
-
-    .promise-card h4 {
-      color: var(--gold);
-      margin-bottom: 8px;
-      font-size: 1.1rem;
-    }
-
-    .promise-card p {
-      font-size: 0.98rem;
-      color: var(--text-main);
-      line-height: 1.5;
-    }
-
-    /* Mensaje final */
     .footer-note {
       text-align: center;
       margin-top: 25px;
       font-style: italic;
       color: var(--text-muted);
-      font-size: 0.9rem;
+      font-size: 0.85rem;
     }
   </style>
 </head>
 <body>
 
+  <!-- Canvas de fondo para las estrellas -->
+  <canvas id="space-canvas"></canvas>
+
   <div class="container">
     <!-- PANTALLA INICIAL -->
     <div class="envelope-screen" id="envelopeScreen">
-      <div class="envelope-icon">📩</div>
-      <h2 style="margin-bottom: 10px;">¡Tienes un mensaje especial!</h2>
-      <p style="color: var(--text-muted);">Haz clic abajo para abrir esta carta virtual.</p>
-      <button class="btn-open" onclick="openLetter()">Abrir Mensaje</button>
+      <div class="envelope-icon">🌌</div>
+      <h2 style="margin-bottom: 10px;">Un pequeño detalle espacial</h2>
+      <p style="color: var(--text-muted);">Haz clic abajo para abrir este mensaje especial.</p>
+      <button class="btn-main" onclick="openMessage()">Abrir Espacio</button>
     </div>
 
-    <!-- PANTALLA CARTA INTERACTIVA -->
-    <div class="letter-screen" id="letterScreen">
-      <h1 class="letter-title">Para alguien muy especial ✨</h1>
+    <!-- PANTALLA PRINCIPAL -->
+    <div class="main-screen" id="mainScreen">
       
-      <div class="letter-body">
-        <p>¡Hola!</p><br>
-        <p>Quería tomarme un momento para hacerte este detalle. Desde que nos conocimos por internet, me has ayudado muchísimo y quería asegurarme de que lo supieras.</p><br>
-        <p>A veces la ayuda llega cuando menos lo esperamos, y la tuya ha significado bastante para mí. Por eso, me nació prepararte este espacio con dos cosas muy importantes que quiero que tengas siempre presentes:</p>
+      <!-- Navegación entre espacios -->
+      <div class="nav-tabs">
+        <button class="tab-btn active" onclick="switchTab('universe')">🌌 El Universo</button>
+        <button class="tab-btn" onclick="switchTab('promises')">✨ Mis Promesas</button>
       </div>
 
-      <!-- SECCIÓN DE RECORDATORIOS Y PROMESAS -->
-      <div class="promises-section">
-        <h3 class="promises-title">✨ Lo que quiero que nunca olvides</h3>
+      <!-- ESPACIO 1: EL UNIVERSO -->
+      <div id="universe" class="tab-content active">
+        <div class="universe-box">
+          <h2>Un espacio entre las estrellas ✨</h2>
+          <p>
+            Entre la inmensidad del universo y la cantidad de personas que hay en el mundo, haber coincidido contigo ha sido increíble.
+          </p>
+          <br>
+          <p>
+            Desde que nos conocimos por internet me has ayudado muchísimo. Quería dedicarte este pequeño rincón digital como un reflejo de mi agradecimiento.
+          </p>
+        </div>
+      </div>
+
+      <!-- ESPACIO 2: LAS PROMESAS -->
+      <div id="promises" class="tab-content">
+        <h3 style="text-align: center; color: var(--gold); margin-bottom: 15px;">Lo que quiero asegurar para ti</h3>
         <div class="promises-grid">
           
           <div class="promise-card">
-            <h4>💬 Apoyo Incondicional & Escucha</h4>
-            <p>Quiero que sepas que siempre estaré disponible para hablar de cualquier tema que quieras, sin importar el momento. A partir de ahora <span class="highlight">nunca estarás sola</span>; siempre estaré aquí para ti cuando lo necesites.</p>
+            <h4>💬 Apoyo Incondicional</h4>
+            <p>Siempre estaré disponible para hablar de cualquier tema que quieras. A partir de ahora <span class="highlight">nunca estarás sola</span>; puedes contar conmigo en todo momento que lo necesites.</p>
           </div>
 
           <div class="promise-card">
-            <h4>🌟 Tu Valor e Importancia</h4>
-            <p>Nunca dudes de lo valiosa e importante que eres. Tu presencia y tu forma de ayudar marcan una gran diferencia, y quiero recordarte el enorme impacto positivo que tienes.</p>
+            <h4>🌟 Lo Importante Que Eres</h4>
+            <p>Quiero recordarte lo valiosa e importante que eres. Tu ayuda y tu presencia significan mucho para mí, y siempre estaré apoyándote en cada proyecto y meta que te propongas.</p>
           </div>
 
         </div>
@@ -217,10 +277,63 @@
   </div>
 
   <script>
-    function openLetter() {
+    // Abrir mensaje principal
+    function openMessage() {
       document.getElementById('envelopeScreen').style.display = 'none';
-      document.getElementById('letterScreen').style.display = 'block';
+      document.getElementById('mainScreen').style.display = 'block';
     }
+
+    // Cambiar entre pestañas
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+
+      document.getElementById(tabId).classList.add('active');
+      event.currentTarget.classList.add('active');
+    }
+
+    // Generador de estrellas en Canvas
+    const canvas = document.getElementById('space-canvas');
+    const ctx = canvas.getContext('2d');
+    let stars = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      createStars();
+    }
+
+    function createStars() {
+      stars = [];
+      const count = Math.floor((canvas.width * canvas.height) / 3000);
+      for (let i = 0; i < count; i++) {
+        stars.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          radius: Math.random() * 1.5,
+          alpha: Math.random(),
+          speed: Math.random() * 0.02 + 0.005
+        });
+      }
+    }
+
+    function animateStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      stars.forEach(star => {
+        star.alpha += star.speed;
+        if (star.alpha > 1 || star.alpha < 0) star.speed = -star.speed;
+
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${Math.abs(star.alpha)})`;
+        ctx.fill();
+      });
+      requestAnimationFrame(animateStars);
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    animateStars();
   </script>
 </body>
 </html>
