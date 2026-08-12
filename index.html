@@ -81,7 +81,7 @@
       transform: translateY(-2px);
     }
 
-    /* Pantalla 2: Carta Interactiva (Oculta al inicio) */
+    /* Pantalla 2: Carta Interactiva */
     .letter-screen {
       display: none;
       background: var(--card-bg);
@@ -117,47 +117,48 @@
       font-weight: 600;
     }
 
-    /* Sección de Vales / Cupones */
-    .coupons-section {
+    /* Sección de Promesas y Recordatorios */
+    .promises-section {
       margin-top: 30px;
       border-top: 1px solid rgba(255, 255, 255, 0.1);
       padding-top: 20px;
     }
 
-    .coupons-title {
+    .promises-title {
       font-size: 1.2rem;
       margin-bottom: 15px;
       text-align: center;
       color: var(--text-muted);
     }
 
-    .coupon-grid {
+    .promises-grid {
       display: grid;
-      gap: 12px;
+      gap: 15px;
     }
 
-    .coupon-card {
+    .promise-card {
       background: rgba(255, 255, 255, 0.05);
-      border: 1px dashed var(--accent);
-      padding: 15px;
-      border-radius: 10px;
-      cursor: pointer;
+      border: 1px solid var(--accent);
+      padding: 18px;
+      border-radius: 12px;
       transition: background 0.3s, transform 0.2s;
     }
 
-    .coupon-card:hover {
+    .promise-card:hover {
       background: rgba(99, 102, 241, 0.15);
-      transform: scale(1.02);
+      transform: translateY(-2px);
     }
 
-    .coupon-card h4 {
+    .promise-card h4 {
       color: var(--gold);
-      margin-bottom: 5px;
+      margin-bottom: 8px;
+      font-size: 1.1rem;
     }
 
-    .coupon-card p {
-      font-size: 0.95rem;
-      color: var(--text-muted);
+    .promise-card p {
+      font-size: 0.98rem;
+      color: var(--text-main);
+      line-height: 1.5;
     }
 
     /* Mensaje final */
@@ -188,28 +189,22 @@
       <div class="letter-body">
         <p>¡Hola!</p><br>
         <p>Quería tomarme un momento para hacerte este detalle. Desde que nos conocimos por internet, me has ayudado muchísimo y quería asegurarme de que lo supieras.</p><br>
-        <p>A veces el apoyo llega desde donde menos lo esperamos, y tu ayuda ha significado bastante para mí. Por eso, quiero recordarte que <span class="highlight">aquí estaré para apoyarte en todo lo que hagas</span>, ya sea en tus proyectos, metas o simplemente cuando necesites hablar.</p><br>
-        <p>¡Cuenta conmigo siempre!</p>
+        <p>A veces la ayuda llega cuando menos lo esperamos, y la tuya ha significado bastante para mí. Por eso, me nació prepararte este espacio con dos cosas muy importantes que quiero que tengas siempre presentes:</p>
       </div>
 
-      <!-- VALES INTERACTIVOS -->
-      <div class="coupons-section">
-        <h3 class="coupons-title">🎟️ Vales de Apoyo Incondicional (Haz clic en uno)</h3>
-        <div class="coupon-grid">
+      <!-- SECCIÓN DE RECORDATORIOS Y PROMESAS -->
+      <div class="promises-section">
+        <h3 class="promises-title">✨ Lo que quiero que nunca olvides</h3>
+        <div class="promises-grid">
           
-          <div class="coupon-card" onclick="alert('Vale Activado: Cuando necesites ayuda en un proyecto o idea, avísame y sumamos fuerzas.')">
-            <h4>💡 Vale de Colaboración</h4>
-            <p>Apoyo garantizado para tu próximo proyecto o idea.</p>
+          <div class="promise-card">
+            <h4>💬 Apoyo Incondicional & Escucha</h4>
+            <p>Quiero que sepas que siempre estaré disponible para hablar de cualquier tema que quieras, sin importar el momento. A partir de ahora <span class="highlight">nunca estarás sola</span>; siempre estaré aquí para ti cuando lo necesites.</p>
           </div>
 
-          <div class="coupon-card" onclick="alert('Vale Activado: Si algún día tienes un mal día o quieres desahogarte, estaré ahí para escucharte.')">
-            <h4>🎧 Vale de Escucha Atenta</h4>
-            <p>Una conversación o llamada sin juzgar cuando lo necesites.</p>
-          </div>
-
-          <div class="coupon-card" onclick="alert('Vale Activado: Para celebrar cualquier logro que alcances, por más pequeño que parezca.')">
-            <h4>🎉 Vale de Celebración</h4>
-            <p>Un espacio para celebrar cada uno de tus éxitos.</p>
+          <div class="promise-card">
+            <h4>🌟 Tu Valor e Importancia</h4>
+            <p>Nunca dudes de lo valiosa e importante que eres. Tu presencia y tu forma de ayudar marcan una gran diferencia, y quiero recordarte el enorme impacto positivo que tienes.</p>
           </div>
 
         </div>
