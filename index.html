@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Un detalle especial para ti ✨</title>
+  <style>
+    /* Estilos generales y paleta de colores */
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --accent: #6366f1;
+      --accent-hover: #4f46e5;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --gold: #fbbf24;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      width: 100%;
+      margin: auto;
+      text-align: center;
+    }
+
+    /* Pantalla 1: Sobre / Botón de Inicio */
+    .envelope-screen {
+      background: var(--card-bg);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 40px 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      transition: all 0.4s ease;
+    }
+
+    .envelope-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+      display: inline-block;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .btn-open {
+      background-color: var(--accent);
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background-color 0.2s, transform 0.2s;
+      margin-top: 20px;
+      box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+    }
+
+    .btn-open:hover {
+      background-color: var(--accent-hover);
+      transform: translateY(-2px);
+    }
+
+    /* Pantalla 2: Carta Interactiva (Oculta al inicio) */
+    .letter-screen {
+      display: none;
+      background: var(--card-bg);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 30px 24px;
+      text-align: left;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      animation: fadeIn 0.8s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .letter-title {
+      font-size: 1.8rem;
+      color: var(--gold);
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .letter-body {
+      line-height: 1.7;
+      color: var(--text-main);
+      margin-bottom: 25px;
+      font-size: 1.05rem;
+    }
+
+    .highlight {
+      color: #38bdf8;
+      font-weight: 600;
+    }
+
+    /* Sección de Vales / Cupones */
+    .coupons-section {
+      margin-top: 30px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 20px;
+    }
+
+    .coupons-title {
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    .coupon-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .coupon-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px dashed var(--accent);
+      padding: 15px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .coupon-card:hover {
+      background: rgba(99, 102, 241, 0.15);
+      transform: scale(1.02);
+    }
+
+    .coupon-card h4 {
+      color: var(--gold);
+      margin-bottom: 5px;
+    }
+
+    .coupon-card p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    /* Mensaje final */
+    .footer-note {
+      text-align: center;
+      margin-top: 25px;
+      font-style: italic;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- PANTALLA INICIAL -->
+    <div class="envelope-screen" id="envelopeScreen">
+      <div class="envelope-icon">📩</div>
+      <h2 style="margin-bottom: 10px;">¡Tienes un mensaje especial!</h2>
+      <p style="color: var(--text-muted);">Haz clic abajo para abrir esta carta virtual.</p>
+      <button class="btn-open" onclick="openLetter()">Abrir Mensaje</button>
+    </div>
+
+    <!-- PANTALLA CARTA INTERACTIVA -->
+    <div class="letter-screen" id="letterScreen">
+      <h1 class="letter-title">Para alguien muy especial ✨</h1>
+      
+      <div class="letter-body">
+        <p>¡Hola!</p><br>
+        <p>Quería tomarme un momento para hacerte este detalle. Desde que nos conocimos por internet, me has ayudado muchísimo y quería asegurarme de que lo supieras.</p><br>
+        <p>A veces el apoyo llega desde donde menos lo esperamos, y tu ayuda ha significado bastante para mí. Por eso, quiero recordarte que <span class="highlight">aquí estaré para apoyarte en todo lo que hagas</span>, ya sea en tus proyectos, metas o simplemente cuando necesites hablar.</p><br>
+        <p>¡Cuenta conmigo siempre!</p>
+      </div>
+
+      <!-- VALES INTERACTIVOS -->
+      <div class="coupons-section">
+        <h3 class="coupons-title">🎟️ Vales de Apoyo Incondicional (Haz clic en uno)</h3>
+        <div class="coupon-grid">
+          
+          <div class="coupon-card" onclick="alert('Vale Activado: Cuando necesites ayuda en un proyecto o idea, avísame y sumamos fuerzas.')">
+            <h4>💡 Vale de Colaboración</h4>
+            <p>Apoyo garantizado para tu próximo proyecto o idea.</p>
+          </div>
+
+          <div class="coupon-card" onclick="alert('Vale Activado: Si algún día tienes un mal día o quieres desahogarte, estaré ahí para escucharte.')">
+            <h4>🎧 Vale de Escucha Atenta</h4>
+            <p>Una conversación o llamada sin juzgar cuando lo necesites.</p>
+          </div>
+
+          <div class="coupon-card" onclick="alert('Vale Activado: Para celebrar cualquier logro que alcances, por más pequeño que parezca.')">
+            <h4>🎉 Vale de Celebración</h4>
+            <p>Un espacio para celebrar cada uno de tus éxitos.</p>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="footer-note">
+        Hecho con dedicación usando código 💻✨
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openLetter() {
+      document.getElementById('envelopeScreen').style.display = 'none';
+      document.getElementById('letterScreen').style.display = 'block';
+    }
+  </script>
+</body>
+</html>

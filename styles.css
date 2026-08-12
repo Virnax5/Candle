@@ -1,0 +1,9 @@
+body {
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  display: flex;
+  justify-content: center;
+  align-items: center; /* <--- Cambia align-align por align-items aquí */
+  min-height: 100vh;
+  padding: 20px;
+}
