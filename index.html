@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Un detalle especial para ti ✨</title>
+  <title>Un regalo pequeño ✨</title>
+  <!-- Cargamos Three.js desde CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <style>
     :root {
       --bg-color: #0b0f19;
@@ -34,7 +36,7 @@
       position: relative;
     }
 
-    /* Fondo del Universo */
+    /* Fondo de estrellas 2D generales */
     #space-canvas {
       position: fixed;
       top: 0;
@@ -121,13 +123,14 @@
       margin-bottom: 25px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       padding-bottom: 15px;
+      flex-wrap: wrap;
     }
 
     .tab-btn {
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.1);
       color: var(--text-muted);
-      padding: 10px 20px;
+      padding: 10px 18px;
       border-radius: 20px;
       cursor: pointer;
       font-weight: 600;
@@ -150,10 +153,10 @@
       animation: fadeIn 0.5s ease;
     }
 
-    /* Estilos del Espacio Universo */
+    /* Estilos Carta */
     .universe-box {
       text-align: center;
-      padding: 30px 10px;
+      padding: 20px 10px;
     }
 
     .universe-box h2 {
@@ -168,7 +171,31 @@
       color: var(--text-main);
     }
 
-    /* Estilos del Espacio Promesas */
+    /* Estilos Galaxia 3D */
+    .galaxy-container {
+      width: 100%;
+      height: 380px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      position: relative;
+      background: #020308;
+    }
+
+    #galaxy-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .galaxy-instruction {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+
+    /* Estilos Promesas */
     .promises-grid {
       display: grid;
       gap: 16px;
@@ -217,14 +244,14 @@
 </head>
 <body>
 
-  <!-- Canvas de fondo para las estrellas -->
+  <!-- Canvas de fondo general -->
   <canvas id="space-canvas"></canvas>
 
   <div class="container">
     <!-- PANTALLA INICIAL -->
     <div class="envelope-screen" id="envelopeScreen">
       <div class="envelope-icon">🌌</div>
-      <h2 style="margin-bottom: 10px;">Un pequeño detalle espacial</h2>
+      <h2 style="margin-bottom: 10px;">Un regalo pequeño</h2>
       <p style="color: var(--text-muted);">Haz clic abajo para abrir este mensaje especial.</p>
       <button class="btn-main" onclick="openMessage()">Abrir Espacio</button>
     </div>
@@ -232,16 +259,17 @@
     <!-- PANTALLA PRINCIPAL -->
     <div class="main-screen" id="mainScreen">
       
-      <!-- Navegación entre espacios -->
+      <!-- Navegación por Pestañas -->
       <div class="nav-tabs">
-        <button class="tab-btn active" onclick="switchTab('universe')">🌌 El Universo</button>
+        <button class="tab-btn active" onclick="switchTab('universe')">📖 Carta</button>
+        <button class="tab-btn" onclick="switchTab('galaxy')">🌌 Galaxia 3D</button>
         <button class="tab-btn" onclick="switchTab('promises')">✨ Mis Promesas</button>
       </div>
 
-      <!-- ESPACIO 1: EL UNIVERSO -->
+      <!-- ESPACIO 1: CARTA -->
       <div id="universe" class="tab-content active">
         <div class="universe-box">
-          <h2>Un espacio entre las estrellas ✨</h2>
+          <h2>Un regalo pequeño ✨</h2>
           <p>
             Entre la inmensidad del universo y la cantidad de personas que hay en el mundo, haber coincidido contigo ha sido increíble.
           </p>
@@ -252,7 +280,16 @@
         </div>
       </div>
 
-      <!-- ESPACIO 2: LAS PROMESAS -->
+      <!-- ESPACIO 2: GALAXIA TIPO ANDRÓMEDA 3D -->
+      <div id="galaxy" class="tab-content">
+        <h3 style="text-align: center; color: var(--gold); margin-bottom: 12px;">Galaxia Espiral ✨</h3>
+        <div class="galaxy-container">
+          <canvas id="galaxy-canvas"></canvas>
+        </div>
+        <p class="galaxy-instruction">✨ Pasa el ratón o el dedo sobre la galaxia para explorarla en 3D.</p>
+      </div>
+
+      <!-- ESPACIO 3: PROMESAS -->
       <div id="promises" class="tab-content">
         <h3 style="text-align: center; color: var(--gold); margin-bottom: 15px;">Lo que quiero asegurar para ti</h3>
         <div class="promises-grid">
@@ -277,22 +314,24 @@
   </div>
 
   <script>
-    // Abrir mensaje principal
     function openMessage() {
       document.getElementById('envelopeScreen').style.display = 'none';
       document.getElementById('mainScreen').style.display = 'block';
     }
 
-    // Cambiar entre pestañas
     function switchTab(tabId) {
       document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
 
       document.getElementById(tabId).classList.add('active');
       event.currentTarget.classList.add('active');
+
+      if (tabId === 'galaxy' && !galaxyInitialized) {
+        initGalaxy3D();
+      }
     }
 
-    // Generador de estrellas en Canvas
+    // --- FONDO 2D ESTRELLAS ---
     const canvas = document.getElementById('space-canvas');
     const ctx = canvas.getContext('2d');
     let stars = [];
@@ -334,6 +373,169 @@
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
     animateStars();
+
+    // --- RECREACIÓN DE GALAXIA ESPIRAL ALTA DENSIDAD CON THREE.JS ---
+    let galaxyInitialized = false;
+
+    function initGalaxy3D() {
+      galaxyInitialized = true;
+      const container = document.querySelector('.galaxy-container');
+      const galaxyCanvas = document.getElementById('galaxy-canvas');
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
+      
+      // Inclinación tipo fotografía de Andrómeda
+      camera.position.set(0, 2.2, 3.8);
+
+      const renderer = new THREE.WebGLRenderer({ canvas: galaxyCanvas, antialias: true });
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      const galaxyGroup = new THREE.Group();
+
+      // Parámetros del disco galáctico
+      const parameters = {
+        count: 45000,
+        size: 0.011,
+        radius: 4.2,
+        branches: 2,
+        spin: 1.6,
+        randomness: 0.5,
+        power: 3.5,
+        insideColor: '#fff9e6',  // Blanco-amarillento cálido y brillante
+        outsideColor: '#38bdf8'  // Azul cobalto / celeste brillante
+      };
+
+      const geometry = new THREE.BufferGeometry();
+      const positions = new Float32Array(parameters.count * 3);
+      const colors = new Float32Array(parameters.count * 3);
+
+      const colorInside = new THREE.Color(parameters.insideColor);
+      const colorOutside = new THREE.Color(parameters.outsideColor);
+
+      for (let i = 0; i < parameters.count; i++) {
+        const i3 = i * 3;
+
+        const radius = Math.random() * parameters.radius;
+        const spinAngle = radius * parameters.spin;
+        const branchAngle = ((i % parameters.branches) / parameters.branches) * Math.PI * 2;
+
+        const randomX = Math.pow(Math.random(), parameters.power) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
+        const randomY = Math.pow(Math.random(), parameters.power) * (Math.random() < 0.5 ? 1 : -1) * (parameters.randomness * 0.35) * radius;
+        const randomZ = Math.pow(Math.random(), parameters.power) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
+
+        positions[i3] = Math.cos(branchAngle + spinAngle) * radius + randomX;
+        positions[i3 + 1] = randomY;
+        positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius + randomZ;
+
+        // Mezcla de color: centro súper cálido e intenso -> bordes azules
+        const mixedColor = colorInside.clone();
+        mixedColor.lerp(colorOutside, Math.pow(radius / parameters.radius, 0.7));
+
+        colors[i3] = mixedColor.r;
+        colors[i3 + 1] = mixedColor.g;
+        colors[i3 + 2] = mixedColor.b;
+      }
+
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+      const material = new THREE.PointsMaterial({
+        size: parameters.size,
+        sizeAttenuation: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+        vertexColors: true
+      });
+
+      const points = new THREE.Points(geometry, material);
+      galaxyGroup.add(points);
+
+      // --- NÚCLEO EXTRA RESPLANDECIENTE (BULBO GALÁCTICO) ---
+      const coreCount = 12000;
+      const coreGeometry = new THREE.BufferGeometry();
+      const corePositions = new Float32Array(coreCount * 3);
+      const coreColors = new Float32Array(coreCount * 3);
+
+      const coreColor = new THREE.Color('#ffffff');
+      const coreOuterColor = new THREE.Color('#ffebd0');
+
+      for (let i = 0; i < coreCount; i++) {
+        const i3 = i * 3;
+        const r = Math.pow(Math.random(), 2.5) * 0.8;
+        const theta = Math.random() * Math.PI * 2;
+        const phi = Math.acos((Math.random() * 2) - 1);
+
+        corePositions[i3] = r * Math.sin(phi) * Math.cos(theta);
+        corePositions[i3 + 1] = (r * Math.sin(phi) * Math.sin(theta)) * 0.4;
+        corePositions[i3 + 2] = r * Math.cos(phi);
+
+        const c = coreColor.clone().lerp(coreOuterColor, r / 0.8);
+        coreColors[i3] = c.r;
+        coreColors[i3 + 1] = c.g;
+        coreColors[i3 + 2] = c.b;
+      }
+
+      coreGeometry.setAttribute('position', new THREE.BufferAttribute(corePositions, 3));
+      coreGeometry.setAttribute('color', new THREE.BufferAttribute(coreColors, 3));
+
+      const coreMaterial = new THREE.PointsMaterial({
+        size: 0.022,
+        sizeAttenuation: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.9
+      });
+
+      const corePoints = new THREE.Points(coreGeometry, coreMaterial);
+      galaxyGroup.add(corePoints);
+
+      // Inclinación diagonal del disco de la galaxia
+      galaxyGroup.rotation.z = -Math.PI * 0.22;
+      galaxyGroup.rotation.x = Math.PI * 0.15;
+      scene.add(galaxyGroup);
+
+      // Movimiento interactivo
+      let mouseX = 0;
+      let mouseY = 0;
+
+      container.addEventListener('mousemove', (e) => {
+        const rect = container.getBoundingClientRect();
+        mouseX = ((e.clientX - rect.left) / container.clientWidth - 0.5) * 0.6;
+        mouseY = ((e.clientY - rect.top) / container.clientHeight - 0.5) * 0.6;
+      });
+
+      const clock = new THREE.Clock();
+
+      function animateGalaxy() {
+        const elapsedTime = clock.getElapsedTime();
+
+        // Rotación lenta de la galaxia y del núcleo
+        points.rotation.y = elapsedTime * 0.07;
+        corePoints.rotation.y = elapsedTime * 0.09;
+
+        // Interacción suave con el cursor
+        camera.position.x += (mouseX - camera.position.x) * 0.05;
+        camera.position.y += (-mouseY + 2.2 - camera.position.y) * 0.05;
+        camera.lookAt(scene.position);
+
+        renderer.render(scene, camera);
+        requestAnimationFrame(animateGalaxy);
+      }
+
+      animateGalaxy();
+
+      window.addEventListener('resize', () => {
+        if (container.clientWidth > 0) {
+          camera.aspect = container.clientWidth / container.clientHeight;
+          camera.updateProjectionMatrix();
+          renderer.setSize(container.clientWidth, container.clientHeight);
+        }
+      });
+    }
   </script>
 </body>
 </html>
